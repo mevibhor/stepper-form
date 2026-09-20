@@ -4,13 +4,10 @@ const Summary = () => {
   const plans = usePlans();
 
   const getPlanName = () => {
-    if (plans.plansValue === 9 || plans.plansValue === 90) {
-      return "Arcade";
-    } else if (plans.plansValue === 12 || plans.plansValue === 120) {
-      return "Advanced";
-    } else if (plans.plansValue === 15 || plans.plansValue === 150) {
-      return "Pro";
-    }
+    if (plans.plansValue === 9 || plans.plansValue === 90) return "Arcade";
+    if (plans.plansValue === 12 || plans.plansValue === 120) return "Advanced";
+    if (plans.plansValue === 15 || plans.plansValue === 150) return "Pro";
+    return "";
   };
 
   const getAddonPrice = (price: number) => {
@@ -28,61 +25,67 @@ const Summary = () => {
     (showCustomizableProfile ? getAddonPrice(3) : 0);
 
   return (
-    <div className="p-2 text-[#02295A]">
-      <h1 className="text-[32px] font-bold">Finishing up</h1>
-      <p className="text-[16px] text-gray-400">
+    <div className="text-[#02295A]">
+      <h1 className="mb-2 text-2xl font-bold md:text-3xl">Finishing up</h1>
+      <p className="mb-6 text-sm text-gray-400 md:text-base">
         Double-check everything looks OK before confirming.
       </p>
-      <div className="bg-[#F0F6FF] p-10 rounded-lg mt-8">
-        <div className="flex justify-between">
-          <p className="text-xl font-medium">
-            {getPlanName()} (
-            {plans.billingFrequency === "monthly" ? "Monthly" : "Yearly"})
-          </p>
-          <p className="font-bold">
-            ${plans.plansValue}/
-            {plans.billingFrequency === "monthly" ? "mo" : "yr"}
-          </p>
-        </div>
-        <div className="border my-6"></div>
-        {showLocalStorage && (
-          <div className="flex justify-between">
-            <p>Local Storage</p>
-            <p>
-              ${getAddonPrice(1)}/
+
+      {/* Summary Card */}
+      <div className="bg-[#F0F6FF] rounded-lg p-4 md:p-6 mb-4">
+        {/* Plan */}
+        <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
+          <div className="flex justify-between w-full">
+            <p className="text-sm font-bold md:text-base">
+              {getPlanName()} (
+              {plans.billingFrequency === "monthly" ? "Monthly" : "Yearly"})
+            </p>
+            <p className="font-bold">
+              ${plans.plansValue}/
               {plans.billingFrequency === "monthly" ? "mo" : "yr"}
             </p>
+          </div>
+        </div>
+
+        {/* Add-ons */}
+        {showLocalStorage && (
+          <div className="flex justify-between py-2">
+            <span className="text-sm text-gray-400">Local Storage</span>
+            <span className="text-sm">
+              +${getAddonPrice(1)}/
+              {plans.billingFrequency === "monthly" ? "mo" : "yr"}
+            </span>
           </div>
         )}
         {showOnlineService && (
-          <div className="flex justify-between items-center py-4">
-            <p>Online Service</p>
-            <p>
-              ${getAddonPrice(2)}/
+          <div className="flex justify-between py-2">
+            <span className="text-sm text-gray-400">Online Service</span>
+            <span className="text-sm">
+              +${getAddonPrice(2)}/
               {plans.billingFrequency === "monthly" ? "mo" : "yr"}
-            </p>
+            </span>
           </div>
         )}
         {showCustomizableProfile && (
-          <div className="flex justify-between items-center">
-            <p>Customizable profile</p>
-            <p>
-              ${getAddonPrice(3)}/
+          <div className="flex justify-between py-2">
+            <span className="text-sm text-gray-400">Customizable Profile</span>
+            <span className="text-sm">
+              +${getAddonPrice(3)}/
               {plans.billingFrequency === "monthly" ? "mo" : "yr"}
-            </p>
+            </span>
           </div>
         )}
       </div>
-      <div className="flex justify-between p-6">
-        <span className="font-bold text-xl flex gap-2">
-          Total
-          <p className="text-gray-400 font-medium">
-            ({plans.billingFrequency === "monthly" ? "per month" : "per year"})
-          </p>
+
+      {/* Total */}
+      <div className="flex items-center justify-between p-4">
+        <span className="text-sm font-bold md:text-base">
+          Total (
+          {plans.billingFrequency === "monthly" ? "per month" : "per year"})
         </span>
-        <p className="font-bold">
+        <span className="font-bold text-lg md:text-xl text-[#6A5BFF]">
           ${total}/{plans.billingFrequency === "monthly" ? "mo" : "yr"}
-        </p>
+        </span>
       </div>
     </div>
   );

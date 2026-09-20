@@ -6,16 +6,16 @@ const Toggle = () => {
   return (
     <label
       htmlFor="AcceptConditions"
-      className="relative h-7 w-[52px] cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-blue-500 mt-4"
+      className="relative h-7 w-[52px] cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-blue-500"
     >
       <input
         type="checkbox"
         id="AcceptConditions"
-        className="peer sr-only"
+        className="sr-only peer"
         onChange={handleYearlyPlansToggle}
         checked={billingFrequency === "yearly"}
       />
-      <span className="absolute inset-y-0 start-0 z-10 m-1 inline-flex size-5 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-blue-600">
+      <span className="absolute inset-y-0 z-10 inline-flex items-center justify-center m-1 text-gray-400 transition-all bg-white rounded-full start-0 size-5 peer-checked:start-6 peer-checked:text-blue-600">
         <svg
           data-unchecked-icon
           xmlns="http://www.w3.org/2000/svg"

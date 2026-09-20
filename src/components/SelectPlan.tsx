@@ -3,39 +3,52 @@ import advanced from "../assets/images/icon-advanced.svg";
 import pro from "../assets/images/icon-pro.svg";
 import arcade from "../assets/images/icon-arcade.svg";
 import Toggle from "./Toggle";
+import { cn } from "../lib/utils";
 
 const SelectPlan = () => {
   const { handlePlanToggle, plansValue, billingFrequency } = usePlans();
+
   const plans = [
     {
       label: "Arcade",
       value: billingFrequency === "monthly" ? 9 : 90,
       image: arcade,
+      description: "1 month free",
     },
     {
       label: "Advanced",
       value: billingFrequency === "monthly" ? 12 : 120,
       image: advanced,
+      description: "1.5 months free",
     },
     {
       label: "Pro",
       value: billingFrequency === "monthly" ? 15 : 150,
       image: pro,
+      description: "2 months free",
     },
   ];
+
   return (
-    <div className="p-2 text-[#02295A] flex flex-col">
-      <h1 className="text-[32px] font-bold">Select your plan</h1>
-      <p className="text-[16px] text-gray-400">
+    <div className="text-[#02295A]">
+      <h1 className="text-2xl lg:text-3xl font-bold mb-2">Select your plan</h1>
+      <p className="text-gray-400 text-sm lg:text-base mb-6">
         You have the option of monthly or yearly billing.
       </p>
-      <form action="" className="flex mt-8 gap-4">
+
+      {/* Plan Cards - row on mobile, coloumn on desktop */}
+      <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 mb-6">
         {plans.map((plan, index) => (
           <label
-            className={`font-medium border hover:border-[#6A5BFF] transition-all flex flex-col rounded-lg w-[33%] h-[25vh] justify-between p-4 ${
-              plan.value === plansValue ? "bg-[#F0F6FF] border-[#6A5BFF]" : ""
-            }`}
             key={index}
+            className={cn(
+              "border rounded-lg p-4 cursor-pointer transition-all flex flex-row lg:flex-col gap-3 justify-between",
+              "hover:border-[#6A5BFF]",
+              plan.value === plansValue
+                ? "bg-[#F0F6FF] border-[#6A5BFF]"
+                : "bg-white border-gray-300",
+              "flex-1",
+            )}
           >
             <input
               type="radio"
@@ -44,22 +57,44 @@ const SelectPlan = () => {
               onChange={() => handlePlanToggle(plan.value)}
               className="hidden"
             />
-            <img src={plan.image} alt="" className="h-12 w-12" />
-            <div>
-              <p className="font-bold text-sm">{plan.label}</p>
-              <span className="text-gray-400 text-sm">
-                {" "}
-                ${plan.value}/{billingFrequency === "monthly" ? "mo" : "yr"}
-              </span>
+            <div className="flex lg:items-start lg:justify-between lg:w-full gap-3 lg:gap-12 lg:flex-col">
+              <img src={plan.image} alt={plan.label} className="h-10 w-10" />
+              <div>
+                <p className="font-bold text-sm lg:text-base">{plan.label}</p>
+                <span className="text-gray-400 text-xs lg:text-sm">
+                  ${plan.value}/{billingFrequency === "monthly" ? "mo" : "yr"}
+                </span>
+              </div>
             </div>
+            {billingFrequency === "yearly" && (
+              <span className="text-xs text-[#6A5BFF] font-medium">
+                {plan.description}
+              </span>
+            )}
           </label>
         ))}
-      </form>
-      <span className="flex gap-4 items-end justify-center mt-4">
-        <p className="text-sm font-bold">Monthly</p>
+      </div>
+
+      {/* Toggle */}
+      <div className="flex items-center justify-center gap-5 py-4 bg-[#F0F6FF] rounded-lg">
+        <span
+          className={cn(
+            "text-sm font-bold",
+            billingFrequency === "monthly" ? "text-[#02295A]" : "text-gray-400",
+          )}
+        >
+          Monthly
+        </span>
         <Toggle />
-        <p className="text-sm font-bold">Yearly</p>
-      </span>
+        <span
+          className={cn(
+            "text-sm font-bold",
+            billingFrequency === "yearly" ? "text-[#02295A]" : "text-gray-400",
+          )}
+        >
+          Yearly
+        </span>
+      </div>
     </div>
   );
 };
