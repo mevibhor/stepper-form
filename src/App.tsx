@@ -7,7 +7,6 @@ import Stepper from "./components/Stepper";
 import Summary from "./components/Summary";
 import Confirmation from "./components/Confirmation";
 import { usePlans } from "./context/Plans";
-import { Toaster, toast } from "sonner";
 import { cn } from "./lib/utils";
 
 const stepsConfig = [
@@ -27,7 +26,6 @@ function App() {
 
   const handleSubmit = () => {
     if (!personalData.name || !personalData.email || !personalData.number) {
-      toast.error("Please fill out all fields");
       return;
     }
     setIsComplete(true);
@@ -70,8 +68,6 @@ function App() {
               <div className="flex-1 w-full">
                 <ActiveComponent />
               </div>
-
-              <Toaster position="top-right" richColors />
 
               {/* Footer Buttons */}
               <div className="flex flex-col-reverse justify-between w-full gap-4 mt-6 md:mt-8 md:flex-row">
