@@ -1,4 +1,4 @@
-import { ComponentType, Dispatch, SetStateAction } from "react";
+import { ComponentType } from "react";
 import bgsidebar from "../assets/images/bg-sidebar-desktop.svg";
 import bgsidebarMobile from "../assets/images/bg-sidebar-mobile.svg";
 import { cn } from "../lib/utils";
@@ -8,14 +8,23 @@ interface StepsConfigType {
   Component: ComponentType;
 }
 
-const Stepper: React.FC<{
+// 1. Update props interface
+interface StepperProps {
   stepsConfig: StepsConfigType[];
   currentStep: number;
-  setCurrentStep: Dispatch<SetStateAction<number>>;
-}> = ({ stepsConfig, currentStep, setCurrentStep }) => {
+  onStepClick: (step: number) => void;
+  isComplete: boolean;
+}
+
+const Stepper: React.FC<StepperProps> = ({
+  stepsConfig,
+  currentStep,
+  onStepClick,
+  isComplete,
+}) => {
   return (
     <>
-      {/* Mobile Stepper - Horizontal at top */}
+      {/* Mobile Stepper */}
       <div className="md:hidden relative w-full h-[120px] bg-[#02295A] rounded-t-xl overflow-hidden">
         <img
           src={bgsidebarMobile}
@@ -24,16 +33,23 @@ const Stepper: React.FC<{
         />
         <div className="relative z-10 flex items-center justify-center gap-4 pt-8">
           {stepsConfig.map((step, index) => {
-            const isActive = currentStep === index + 1;
+            const isActive = !isComplete && currentStep === index + 1;
+            const isClickable = !isComplete;
+
             return (
               <div
                 key={step.name}
-                className="flex flex-col items-center"
-                onClick={() => setCurrentStep(index + 1)}
+                className={cn(
+                  "flex flex-col items-center transition-all",
+                  isClickable
+                    ? "cursor-pointer hover:opacity-80"
+                    : "cursor-not-allowed opacity-50",
+                )}
+                onClick={() => isClickable && onStepClick(index + 1)}
               >
                 <span
                   className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center border-2 text-sm font-bold",
+                    "w-8 h-8 rounded-full flex items-center justify-center border-2 text-sm font-bold transition-all",
                     isActive
                       ? "bg-[#F0F6FF] border-[#F0F6FF] text-[#02295A]"
                       : "bg-transparent border-white text-white",
@@ -47,7 +63,7 @@ const Stepper: React.FC<{
         </div>
       </div>
 
-      {/* Desktop Stepper - Vertical sidebar */}
+      {/* Desktop Stepper */}
       <div className="hidden md:block relative w-full h-full min-h-[500px] bg-[#02295A] rounded-l-xl overflow-hidden">
         <img
           src={bgsidebar}
@@ -56,16 +72,23 @@ const Stepper: React.FC<{
         />
         <div className="relative z-10 flex flex-col gap-8 p-10 mt-12">
           {stepsConfig.map((step, index) => {
-            const isActive = currentStep === index + 1;
+            const isActive = !isComplete && currentStep === index + 1;
+            const isClickable = !isComplete;
+
             return (
               <div
-                className="flex items-center gap-4 cursor-pointer"
+                className={cn(
+                  "flex items-center gap-4 transition-all",
+                  isClickable
+                    ? "cursor-pointer hover:opacity-80"
+                    : "cursor-not-allowed opacity-50",
+                )}
                 key={step.name}
-                onClick={() => setCurrentStep(index + 1)}
+                onClick={() => isClickable && onStepClick(index + 1)}
               >
                 <span
                   className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center border-2 text-sm font-bold",
+                    "w-10 h-10 rounded-full flex items-center justify-center border-2 text-sm font-bold transition-all",
                     isActive
                       ? "bg-[#F0F6FF] border-[#F0F6FF] text-[#02295A]"
                       : "bg-transparent border-white text-white",

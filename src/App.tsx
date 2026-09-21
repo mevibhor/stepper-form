@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import "./App.css";
 import AddOns from "./components/AddOns";
 import PersonalInfo from "./components/PersonalInfo";
@@ -8,6 +9,12 @@ import Summary from "./components/Summary";
 import Confirmation from "./components/Confirmation";
 import { usePlans } from "./context/Plans";
 import { cn } from "./lib/utils";
+
+interface PersonalFormData {
+  name: string;
+  email: string;
+  number: string;
+}
 
 const stepsConfig = [
   { name: "Your Info", Component: PersonalInfo },
@@ -19,19 +26,37 @@ const stepsConfig = [
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isComplete, setIsComplete] = useState(false);
-  const { personalData } = usePlans();
+  const { personalData, setPersonalData } = usePlans();
+
+  const {
+    register,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useForm<PersonalFormData>({
+    defaultValues: {
+      name: String(personalData.name || ""),
+      email: String(personalData.email || ""),
+      number: String(personalData.number || ""),
+    },
+  });
 
   const totalSteps = stepsConfig.length;
   const isLastStep = currentStep === totalSteps;
 
   const handleSubmit = () => {
-    if (!personalData.name || !personalData.email || !personalData.number) {
+    if (!personalData.name || !personalData.email || !personalData.number)
       return;
-    }
     setIsComplete(true);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (currentStep === 1) {
+      const isValid = await trigger();
+      if (!isValid) return;
+      setPersonalData(getValues());
+    }
+
     if (isLastStep) {
       handleSubmit();
     } else {
@@ -44,32 +69,46 @@ function App() {
     setIsComplete(false);
   };
 
+  const handleStepClick = async (targetStep: number) => {
+    if (targetStep === currentStep) return;
+
+    if (targetStep > currentStep) {
+      if (currentStep === 1) {
+        const isValid = await trigger();
+        if (!isValid) return;
+        setPersonalData(getValues());
+      }
+    }
+    setCurrentStep(targetStep);
+  };
+
   const ActiveComponent = stepsConfig[currentStep - 1].Component;
 
   return (
     <div className="flex items-center justify-center bg-[#F0F6FF] w-full min-h-screen p-4 md:p-6">
-      {/* Main Card */}
       <div className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row w-full max-w-[900px] min-h-[650px]">
-        {/* Left Side - Stepper */}
         <div className="w-full md:w-[33%]">
           <Stepper
             stepsConfig={stepsConfig}
             currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
+            onStepClick={handleStepClick}
+            isComplete={isComplete}
           />
         </div>
 
-        {/* Right Side - Content */}
         <div className="flex flex-col flex-1 p-6 md:p-12 md:items-center md:justify-center">
           {isComplete ? (
             <Confirmation />
           ) : (
             <>
               <div className="flex-1 w-full">
-                <ActiveComponent />
+                {currentStep === 1 ? (
+                  <PersonalInfo register={register} errors={errors} />
+                ) : (
+                  <ActiveComponent />
+                )}
               </div>
 
-              {/* Footer Buttons */}
               <div className="flex flex-col-reverse justify-between w-full gap-4 mt-6 md:mt-8 md:flex-row">
                 {currentStep > 1 ? (
                   <button

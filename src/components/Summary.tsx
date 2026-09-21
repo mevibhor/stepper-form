@@ -14,14 +14,14 @@ const Summary = () => {
     return plans.billingFrequency === "monthly" ? price : price * 10;
   };
 
-  const showLocalStorage = plans.addOnValue.includes(1);
-  const showOnlineService = plans.addOnValue.includes(2);
+  const showOnlineService = plans.addOnValue.includes(1);
+  const showLocalStorage = plans.addOnValue.includes(2);
   const showCustomizableProfile = plans.addOnValue.includes(3);
 
   const total =
     plans.plansValue +
-    (showLocalStorage ? getAddonPrice(1) : 0) +
-    (showOnlineService ? getAddonPrice(2) : 0) +
+    (showOnlineService ? getAddonPrice(1) : 0) +
+    (showLocalStorage ? getAddonPrice(2) : 0) +
     (showCustomizableProfile ? getAddonPrice(3) : 0);
 
   return (
@@ -48,18 +48,18 @@ const Summary = () => {
         </div>
 
         {/* Add-ons */}
-        {showLocalStorage && (
+        {showOnlineService && (
           <div className="flex justify-between py-2">
-            <span className="text-sm text-gray-400">Local Storage</span>
+            <span className="text-sm text-gray-400">Online Service</span>
             <span className="text-sm">
               +${getAddonPrice(1)}/
               {plans.billingFrequency === "monthly" ? "mo" : "yr"}
             </span>
           </div>
         )}
-        {showOnlineService && (
+        {showLocalStorage && (
           <div className="flex justify-between py-2">
-            <span className="text-sm text-gray-400">Online Service</span>
+            <span className="text-sm text-gray-400">Larger Storage</span>
             <span className="text-sm">
               +${getAddonPrice(2)}/
               {plans.billingFrequency === "monthly" ? "mo" : "yr"}
