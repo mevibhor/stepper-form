@@ -54,7 +54,11 @@ function App() {
       <div className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row w-full max-w-[900px] min-h-[650px]">
         {/* Left Side - Stepper */}
         <div className="w-full md:w-[33%]">
-          <Stepper stepsConfig={stepsConfig} currentStep={currentStep} />
+          <Stepper
+            stepsConfig={stepsConfig}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+          />
         </div>
 
         {/* Right Side - Content */}

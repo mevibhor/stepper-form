@@ -1,4 +1,4 @@
-import { ComponentType } from "react";
+import { ComponentType, Dispatch, SetStateAction } from "react";
 import bgsidebar from "../assets/images/bg-sidebar-desktop.svg";
 import bgsidebarMobile from "../assets/images/bg-sidebar-mobile.svg";
 import { cn } from "../lib/utils";
@@ -11,7 +11,8 @@ interface StepsConfigType {
 const Stepper: React.FC<{
   stepsConfig: StepsConfigType[];
   currentStep: number;
-}> = ({ stepsConfig, currentStep }) => {
+  setCurrentStep: Dispatch<SetStateAction<number>>;
+}> = ({ stepsConfig, currentStep, setCurrentStep }) => {
   return (
     <>
       {/* Mobile Stepper - Horizontal at top */}
@@ -19,13 +20,17 @@ const Stepper: React.FC<{
         <img
           src={bgsidebarMobile}
           alt="Background"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 object-cover w-full h-full"
         />
-        <div className="relative z-10 flex justify-center items-center gap-4 pt-8">
+        <div className="relative z-10 flex items-center justify-center gap-4 pt-8">
           {stepsConfig.map((step, index) => {
             const isActive = currentStep === index + 1;
             return (
-              <div key={step.name} className="flex flex-col items-center">
+              <div
+                key={step.name}
+                className="flex flex-col items-center"
+                onClick={() => setCurrentStep(index + 1)}
+              >
                 <span
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center border-2 text-sm font-bold",
@@ -47,13 +52,17 @@ const Stepper: React.FC<{
         <img
           src={bgsidebar}
           alt="Background Sidebar"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 object-cover w-full h-full"
         />
-        <div className="relative z-10 p-10 flex flex-col gap-8 mt-12">
+        <div className="relative z-10 flex flex-col gap-8 p-10 mt-12">
           {stepsConfig.map((step, index) => {
             const isActive = currentStep === index + 1;
             return (
-              <div className="flex items-center gap-4" key={step.name}>
+              <div
+                className="flex items-center gap-4 cursor-pointer"
+                key={step.name}
+                onClick={() => setCurrentStep(index + 1)}
+              >
                 <span
                   className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center border-2 text-sm font-bold",
@@ -68,7 +77,7 @@ const Stepper: React.FC<{
                   <span className="text-[10px] uppercase tracking-widest text-blue-200 font-medium">
                     Step {index + 1}
                   </span>
-                  <span className="font-bold text-white text-base uppercase">
+                  <span className="text-base font-bold text-white uppercase">
                     {step.name}
                   </span>
                 </div>
