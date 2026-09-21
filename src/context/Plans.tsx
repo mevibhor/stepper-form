@@ -23,7 +23,7 @@ interface PlansContextType {
 }
 
 export const PlansContext = createContext<PlansContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const usePlans = (): PlansContextType => {
@@ -58,27 +58,25 @@ export const PlansProvider: React.FC<PlansProviderProps> = ({ children }) => {
 
   const handlePlanToggle = (value: number) => {
     setPlansValue(value);
-    console.log(`value, ${value}`);
   };
 
   const handleAddOnToggle = (value: number) => {
     setAddOnValue((prevValue) =>
       prevValue.includes(value)
         ? prevValue.filter((item) => item !== value)
-        : [...prevValue, value]
+        : [...prevValue, value],
     );
-    console.log(`Value: ${value}`);
   };
 
   const handleYearlyPlansToggle = () => {
-    setBillingFrequency((prevFrequency) =>
-      prevFrequency === "monthly" ? "yearly" : "monthly"
-    );
-    if (billingFrequency === "monthly") {
-      setPlansValue(90);
-    } else {
-      setPlansValue(9);
-    }
+    setBillingFrequency((prev) => {
+      const isSwitchingToYearly = prev === "monthly";
+      setPlansValue((currentValue) =>
+        isSwitchingToYearly ? currentValue * 10 : currentValue / 10,
+      );
+
+      return isSwitchingToYearly ? "yearly" : "monthly";
+    });
   };
 
   const getAddonPrice = (price: number) => {
